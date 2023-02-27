@@ -2,7 +2,7 @@ package main
 
 import (
 	"net/http"
-	"fmt"
+	_"fmt"
 )
 
 type Router struct{
@@ -21,5 +21,11 @@ func (r *Router) FindHanler(path string) (http.HandlerFunc, bool){
 }
 
 func (r *Router) ServeHTTP(w http.ResponseWriter, request *http.Request){
-	fmt.Fprintf(w, "Hello World")
+	handler, exist := r.FindHanler(request.URL.Path)
+
+	if !exist{
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+	handler(w,request)
 }
